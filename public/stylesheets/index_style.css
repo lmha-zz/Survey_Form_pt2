@@ -1,0 +1,11 @@
+
+.boxMargin {
+	margin: 50px 0 0 0;
+}
+.error {
+	color:red;
+}
+.boxBorder {
+	border:1px solid black;
+	padding: 30px;
+}

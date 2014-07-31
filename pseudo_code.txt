@@ -1,0 +1,9 @@
+1) client requests '/', server renders 'views/index.ejs'
+
+2) when client submits form with information, form action goes to server as /process
+
+3) server processes information and stores the information into session if the information is valid, and res.redirect('/result') which is a server get that renders 'views/result.ejs'
+
+4) when client is on results view and clicks 'go back' button, client will io.emit event called 'go_back'
+
+5) server listens for event called 'go_back', when triggered, the server will unset session data and have res.redirect('/');
