@@ -7,17 +7,48 @@
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="/public/stylesheets/index_style.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	io = io.connect();
+	$(document).ready(function(){
+		$('form').submit(function(e) {
+			$('.error').remove();
+			$('#updated_message').remove();
+			e.preventDefault();
+			io.emit('form_submission', {
+				name: $('#name').val(),
+				location: $('#location').val(),
+				language: $('#language').val(),
+				comment: $('#comment').val(),
+			});
+			this.reset();
+		})
+	})
+
+	io.on('error', function(data) {
+		html = "<div class='row'>"+
+					"<p class='error'>"+data+"</p>"+
+				"</div>";
+		$('form').prepend(html);
+	})
+
+	io.on('updated_message', function(data) {
+		html = "<div id='updated_message' class='row'>"+
+					"<div class='col-sm-6 col-sm-offset-3'>"+
+						"<div class='boxBorder success'>"+
+							data+
+						"</div>"+
+					"</div>"+
+				"</div>";
+		$('.container').prepend(html);
+	})
+	</script>
 </head>
 <body>
-	<div class="container">
-		<div class="row boxMargin">
+	<div class="container boxMargin">
+		<div class="row">
 			<div class="col-sm-6 col-sm-offset-3">			
 				<form class='form-horizontal boxBorder' role='form' action="/result" method="post">
-				<% if(error.length !== 0) { %>
-					<div class="row">
-						<p class='error'><%= error %></p>
-					</div>
-				<% } %>
 					<div class="form-group">
 						<label for="name" class='col-sm-4'>Your Name:</label>
 						<div class="col-sm-8">

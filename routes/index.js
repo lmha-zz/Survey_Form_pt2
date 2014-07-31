@@ -1,28 +1,18 @@
 module.exports = function Route(app) {
 
-	var errorMsg = '';
-
 	app.get('/', function(req, res) {
-		res.render('index', { error: errorMsg });
-		errorMsg = '';
+		res.render('index');
 	})
 
-	app.post('/result', function(req, res) {
-		if((req.body.name).length === 0) {
-			errorMsg = 'Name field is required!';
-			res.redirect('/');
+	app.io.route('form_submission', function(req, res) {
+		if((req.data.name).length == 0) {
+			var errorMsg = 'Name field is required!';
+			req.io.emit('error', errorMsg)
 		} else {
-			res.render('result', {
-				name: req.body.name,
-				location: req.body.location,
-				language: req.body.language,
-				comment: req.body.comment
-			})
+			var luckyNum = Math.ceil((Math.random()*1000-1)+1);
+			var msg = "<p>You emitted the following information to the server: { name: '"+req.data.name+"', location: '"+req.data.location+"', language: '"+req.data.language+"', comment: '"+req.data.comment+"'}</p><p>Your lucky number emitted by the server is "+luckyNum+"</p>";
+			req.io.emit('updated_message', msg);
 		}
-	})
-
-	app.get('/go_back', function(req, res) {
-		res.redirect('/');
 	})
 
 }

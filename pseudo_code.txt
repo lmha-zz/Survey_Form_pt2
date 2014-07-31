@@ -1,9 +1,11 @@
-1) client requests '/', server renders 'views/index.ejs'
+1) have the server render 'views/index.ejs' that has the form for the user to fill out
 
-2) when client submits form with information, form action goes to server as /process
+2) the users fills out the form and submits
 
-3) server processes information and stores the information into session if the information is valid, and res.redirect('/result') which is a server get that renders 'views/result.ejs'
+3) the form information is emitted to the server with the event name 'posting_form'
 
-4) when client is on results view and clicks 'go back' button, client will io.emit event called 'go_back'
+4) the server listens for an event 'posting_form' and when triggered, organizes all the emitted information to form a single message and sends this single messsage with the event called 'updated_message'. It also emits an event called 'random_number' with random number between 1-1000
 
-5) server listens for event called 'go_back', when triggered, the server will unset session data and have res.redirect('/');
+5) the clinet listens for an event called 'random_number' and when this event gets triggered, shows the number in the html
+
+6) the client listesnf or an event called 'updated_message' and when this even gets triggered, displays the message somewhere in teh html
